@@ -29,13 +29,25 @@
     
     
     <entry>
-      <title>first-blog</title>
+      <title>HEXO下载安装与配置详解</title>
       <link href="/2019/09/18/first-blog/"/>
       <url>/2019/09/18/first-blog/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="使用-Hexo-Github搭建免费个人博客"><a href="#使用-Hexo-Github搭建免费个人博客" class="headerlink" title="使用 Hexo+Github搭建免费个人博客"></a>使用 Hexo+Github搭建免费个人博客</h1><hr><p>参考资料：</p><p>Hexo下载安装——<a href="https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html</a><br>主题NexT——<a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a><br>Hexo攻略-添加分类和标签——<a href="https://www.jianshu.com/p/e17711e44e00" target="_blank" rel="noopener">https://www.jianshu.com/p/e17711e44e00</a><br>Hexo插件-百度数据分析——<a href="https://tongji.baidu.com/web/10000065783/homepage/index" target="_blank" rel="noopener">https://tongji.baidu.com/web/10000065783/homepage/index</a></p><p>本人博客预览——JeffCheng95.github.io</p>]]></content>
       
       
+      <categories>
+          
+          <category> 教程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> HEXO </tag>
+            
+        </tags>
       
     </entry>
     
