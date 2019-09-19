@@ -55,17 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="Try My Best">
+  <meta name="description" content="AV.initialize(&quot;dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz&quot;, &quot;VgOnBww5FVNlLDH42jJ8sD4q&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
 <meta property="og:type" content="website">
-<meta property="og:title" content="JeffCheng&#39;s Blog">
-<meta property="og:url" content="http://JeffCheng95.github.io/archives/2019/index.html">
+<meta property="og:title" content="文章热度排行">
+<meta property="og:url" content="http://JeffCheng95.github.io/hot/index.html">
 <meta property="og:site_name" content="JeffCheng&#39;s Blog">
-<meta property="og:description" content="Try My Best">
+<meta property="og:description" content="AV.initialize(&quot;dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz&quot;, &quot;VgOnBww5FVNlLDH42jJ8sD4q&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-19T03:52:57.649Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JeffCheng&#39;s Blog">
-<meta name="twitter:description" content="Try My Best">
-  <link rel="canonical" href="http://JeffCheng95.github.io/archives/2019/">
+<meta name="twitter:title" content="文章热度排行">
+<meta name="twitter:description" content="AV.initialize(&quot;dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz&quot;, &quot;VgOnBww5FVNlLDH42jJ8sD4q&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
+  <link rel="canonical" href="http://JeffCheng95.github.io/hot/">
 
 
 <script id="page-configurations">
@@ -74,12 +75,12 @@
     sidebar: "",
     isHome: false,
     isPost: false,
-    isPage: false,
-    isArchive: true
+    isPage: true,
+    isArchive: false
   };
 </script>
 
-  <title>归档 | JeffCheng's Blog</title>
+  <title>文章热度排行 | JeffCheng's Blog</title>
   
 
 
@@ -291,124 +292,65 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        
-        
-        
-          
-        
-        <span class="collection-header">嗯..! 目前共计 3 篇日志。 继续努力。</span>
-      </div>
-      
-
-      
-
-  
-  
-
-  
+  <div id="posts" class="posts-expand">
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">文章热度排行
+
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+          <div id="hot"></div>
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script>AV.initialize("dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz", "VgOnBww5FVNlLDH42jJ8sD4q");</script>
+<script type="text/javascript">
+  var time=0
+  var title=""
+  var url=""
+  var query = new AV.Query('Counter');
+  query.notEqualTo('id',0);
+  query.descending('time');
+  query.limit(1000);
+  query.find().then(function (todo) {
+    for (var i=0;i<1000;i++){
+      var result=todo[i].attributes;
+      time=result.time;
+      title=result.title;
+      url=result.url;
+      var content="<p>"+"<font color='#1C1C1C'>"+"【文章热度:"+time+"℃】"+"</font>"+"<a href='"+"https://jeffcheng95.github.io/"+url+"'>"+title+"</a>"+"</p>";
+      document.getElementById("hot").innerHTML+=content
+    }
+  }, function (error) {
+    console.log("error");
+  });
+</script>
+        
+      </div>
+      
+      
+      
     </div>
-  
+    
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/18/example_md/" itemprop="url">
-            <span itemprop="name">Cmd Markdown 向导</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-18T13:47:44+08:00"
-              content="2019-09-18">
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/18/first-blog/" itemprop="url">
-            <span itemprop="name">HEXO下载安装与配置详解</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-18T11:35:52+08:00"
-              content="2019-09-18">
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/18/hello-world/" itemprop="url">
-            <span itemprop="name">Hello World</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-18T11:04:28+08:00"
-              content="2019-09-18">
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-
-    </div>
+    
+    
+    
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -427,6 +369,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
