@@ -347,6 +347,20 @@
 			  <span>℃</span>
             </span>
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/23/hexo优化-增加版权声明/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/09/23/hexo优化-增加版权声明/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -419,11 +433,19 @@
                 
               
 
-              <time title="创建时间：2019-09-18 13:47:44 / 修改时间：17:47:00" itemprop="dateCreated datePublished" datetime="2019-09-18T13:47:44+08:00">2019-09-18</time>
+              <time title="创建时间：2019-09-18 13:47:44" itemprop="dateCreated datePublished" datetime="2019-09-18T13:47:44+08:00">2019-09-18</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-24 10:02:12" itemprop="dateModified" datetime="2019-09-24T10:02:12+08:00">2019-09-24</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -450,6 +472,20 @@
 			  <span>℃</span>
             </span>
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/18/example_md/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/09/18/example_md/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -562,6 +598,20 @@
 			  <span>℃</span>
             </span>
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/18/first-blog/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/09/18/first-blog/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -655,6 +705,20 @@
 			  <span>℃</span>
             </span>
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/18/hello-world/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/09/18/hello-world/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -883,106 +947,6 @@ show_date_time();
 
 
 
-  
-  <script>
-  function leancloudSelector(url) {
-    return document.getElementById(url).querySelector('.leancloud-visitors-count');
-  }
-  if (CONFIG.page.isPost) {
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = visitors.getAttribute('id').trim();
-      var title = visitors.getAttribute('data-flag-title').trim();
-
-      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .then(response => response.json())
-              .then(() => {
-                leancloudSelector(url).innerText = counter.time + 1;
-              })
-            
-              .catch(error => {
-                console.log('Failed to save visitor count', error);
-              })
-          } else {
-              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
-                .then(response => response.json())
-                .then(() => {
-                  leancloudSelector(url).innerText = 1;
-                })
-                .catch(error => {
-                  console.log('Failed to create', error);
-                });
-            
-          }
-        })
-        .catch(error => {
-          console.log('LeanCloud Counter Error', error);
-        });
-    }
-  } else {
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return element.getAttribute('id').trim();
-      });
-
-      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length === 0) {
-            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
-              element.innerText = 0;
-            });
-            return;
-          }
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.url;
-            var time = item.time;
-            leancloudSelector(url).innerText = time;
-          }
-          for (var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = leancloudSelector(url);
-            if (element.innerText == '') {
-              element.innerText = 0;
-            }
-          }
-        })
-        .catch(error => {
-          console.log('LeanCloud Counter Error', error);
-        });
-    }
-  }
-
-  fetch('https://app-router.leancloud.cn/2/route?appId=dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz')
-    .then(response => response.json())
-    .then(({ api_server }) => {
-      var Counter = (method, url, data) => {
-        return fetch(`https://${api_server}/1.1${url}`, {
-          method: method,
-          headers: {
-            'X-LC-Id': 'dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz',
-            'X-LC-Key': 'VgOnBww5FVNlLDH42jJ8sD4q',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
-        if (localhost.test(document.URL)) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
 
 
 
@@ -1039,6 +1003,31 @@ show_date_time();
   
 
   
+
+
+<script>
+NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz',
+    appKey: 'VgOnBww5FVNlLDH42jJ8sD4q',
+    placeholder: '欢迎评论交流！',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
 
 </body>
 </html>
