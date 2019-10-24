@@ -55,17 +55,21 @@
   };
 </script>
 
-  <meta name="description" content="Try My Best">
-<meta property="og:type" content="website">
+  <meta name="description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
+<meta property="og:type" content="article">
 <meta property="og:title" content="JeffCheng&#39;s Blog">
-<meta property="og:url" content="http://JeffCheng95.github.io/categories/教程/index.html">
+<meta property="og:url" content="http://JeffCheng95.github.io/2019/10/24/应用单例运行/index.html">
 <meta property="og:site_name" content="JeffCheng&#39;s Blog">
-<meta property="og:description" content="Try My Best">
+<meta property="og:description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png">
+<meta property="og:image" content="http://s1.knowsky.com/20170227/sjygkkw2x5y55.png">
+<meta property="og:updated_time" content="2019-10-24T09:39:10.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JeffCheng&#39;s Blog">
-<meta name="twitter:description" content="Try My Best">
-  <link rel="canonical" href="http://JeffCheng95.github.io/categories/教程/">
+<meta name="twitter:description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
+<meta name="twitter:image" content="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png">
+  <link rel="canonical" href="http://JeffCheng95.github.io/2019/10/24/应用单例运行/">
 
 
 <script id="page-configurations">
@@ -73,13 +77,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>分类: 教程 | JeffCheng's Blog</title>
+  <title> | JeffCheng's Blog</title>
   <style>
   .forkme{
  display: none;
@@ -242,27 +246,6 @@
 
     
 
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-  
-
 </nav>
   <div class="site-search">
     <div class="popup search-popup">
@@ -303,151 +286,193 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-  <div class="post-block category">
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">教程<small>分类</small>
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://JeffCheng95.github.io/2019/10/24/应用单例运行/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeff">
+      <meta itemprop="description" content="Try My Best">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JeffCheng's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-24 17:46:26 / 修改时间：17:39:10" itemprop="dateCreated datePublished" datetime="2019-10-24T17:46:26+08:00">2019-10-24</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span id="/2019/10/24/应用单例运行/" class="post-meta-item leancloud_visitors" data-flag-title="" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+			  <span>℃</span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/10/24/应用单例运行/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/10/24/应用单例运行/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+        <h1 id="应用单例启动（采用文件锁方式）"><a href="#应用单例启动（采用文件锁方式）" class="headerlink" title="应用单例启动（采用文件锁方式）"></a>应用单例启动（采用文件锁方式）</h1><hr>
+<p>有时候我们的应用程序在系统中可能只允许<strong>启动一个</strong>(比如服务程序)，怎么实现这种需求呢？</p>
+<a id="more"></a>
+<p><strong>思想</strong>：我们可以采用文件锁的方式，因为通过文件锁，可以保证同一时刻只有一个应用能占得文件资源，获取锁成功的可以执行，如果被其他进程占用时就不能执行。</p>
+<p><strong>准备</strong>：有了思路后，剩下就是怎么操作设置文件锁了。用到网络锁，就不可避免要使用<a href="https://baike.baidu.com/item/fcntl/6860021?fr=aladdin" target="_blank" rel="noopener">fcntl</a>函数。</p>
+<blockquote>
+<ul>
+<li>fcntl函数，调用可以用来对已打开的文件描述符进行各种控制操作以改变已打开文件的的各种属性</li>
+<li>fcntl函数介绍如下：<br><img src="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png" alt="fcntl函数"></li>
+</ul>
+<p>fcntl的返回值与命令有关。如果出错，所有命令都返回-1，同时错误码记录在errno中；如果成功则返回某个其他值。下列四个命令有特定返回值：F_DUPFD、F_GETFD、F_GETFL、F_GETOWN.第一个返回新的文件描述符，接下来的两个返回相应标志，最后一个返回一个正的进程ID或负的进程组ID。<br>上述我们用到的是<strong>F_SETLK</strong>。如果<strong>锁被其他进程占用</strong>导致无法设定锁，则返回-1，errno错误代码为<strong>EACCES</strong>或<strong>EAGAIN</strong>。<br>当fcntl用于管理文件记录锁的操作时，第三个参数指向一个struct flock *lock的结构体，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct flock</span><br><span class="line">&#123;</span><br><span class="line">    l_type;    /*锁的类型*/</span><br><span class="line">    l_whence;  /*偏移量的起始位置：SEEK_SET,SEEK_CUR,SEEK_END*/</span><br><span class="line">    l_start;     /*加锁的起始偏移*/</span><br><span class="line">    l_len;    /*上锁字节*/</span><br><span class="line">    l_pid;   /*锁的属主进程ID */</span><br><span class="line">&#125;; </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p><img src="http://s1.knowsky.com/20170227/sjygkkw2x5y55.png" alt="flock结构体"></p>
+<p>如果要加锁整个文件，通常的方法是将l_start 设置为0，l_whence 设置为SEEK_SET,l_len设置为0.</p>
+</blockquote>
+<p><strong>实现</strong>:基本的一些知识清楚了之后，就要写代码实现了，下面的代码是我写的一个小demo。<br>主要部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">struct flock flc;</span><br><span class="line">flc.l_type = F_WRLCK;  // write lock</span><br><span class="line">flc.l_start = 0;</span><br><span class="line">flc.l_whence = SEEK_SET;</span><br><span class="line">flc.l_len = 0;		   //lock the whole file</span><br><span class="line">if(fcntl(fd, F_SETLK, &amp;flc) &lt; 0)</span><br><span class="line">&#123;</span><br><span class="line">	if(errno == EACCES || errno == EAGAIN)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;This process already exist!\n&quot;);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	perror(&quot;Set FileLock Failed!&quot;);</span><br><span class="line">	exit(1);</span><br><span class="line">&#125;</span><br><span class="line">printf(&quot;Process will run!\n&quot;);</span><br></pre></td></tr></table></figure>
 
-  
-  
+<p>代码地址：<a href="https://github.com/JeffCheng95/C-C-Demo/tree/master/%E5%BA%94%E7%94%A8%E5%8D%95%E4%BE%8B%E8%BF%90%E8%A1%8C" target="_blank" rel="noopener">https://github.com/JeffCheng95/C-C-Demo/tree/master/应用单例运行</a></p>
 
-  
+    </div>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
-    </div>
-  
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Jeff wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
+      
         
-          <a class="post-title-link" href="/2019/09/29/md文件在github上不能正确换行-md/" itemprop="url">
-            <span itemprop="name">md文件在github上不能正确换行</span>
-          </a>
+      
+
+	<div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-29T15:51:32+08:00"
-              content="2019-09-29">
-          09-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+<div class="my_post_copyright">
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 版权信息 ------</div>
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script> 
   
-  
+  <!-- JS库 sweetalert 可修改路径 -->
 
-  
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  <p><span>本文标题:</span><a href="/2019/10/24/应用单例运行/"></a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jeff 的个人博客">Jeff</a></p>
+  <p><span>发布时间:</span>2019年10月24日 - 17:46</p>
+  <p><span>最后更新:</span>2019年10月24日 - 17:39</p>
+  <p><span>原始链接:</span><a href="/2019/10/24/应用单例运行/" title="">http://JeffCheng95.github.io/2019/10/24/应用单例运行/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://JeffCheng95.github.io/2019/10/24/应用单例运行/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+	});
+    });  
+</script>
 
-      <h2 class="post-title">
+
+      
+	</div>
+
+      <footer class="post-footer">
+
         
-          <a class="post-title-link" href="/2019/09/23/hexo优化-增加版权声明/" itemprop="url">
-            <span itemprop="name">Hexo+NexT博客主题优化：在文章底部增加作者版权信息</span>
-          </a>
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/22/Linux：解决应用程序-动态库中与加载的其他动态库的函数重名问题/" rel="next" title="Linux：解决应用程序/动态库中与加载的其他动态库的函数重名问题">
+                  <i class="fa fa-chevron-left"></i> Linux：解决应用程序/动态库中与加载的其他动态库的函数重名问题
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
         
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-23T16:36:21+08:00"
-              content="2019-09-23">
-          09-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/18/example_md/" itemprop="url">
-            <span itemprop="name">Cmd Markdown 向导</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-18T13:47:44+08:00"
-              content="2019-09-18">
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/18/first-blog/" itemprop="url">
-            <span itemprop="name">HEXO下载安装与配置详解</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-18T11:35:52+08:00"
-              content="2019-09-18">
-          09-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    </div>
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
           
+    
+    <div class="comments" id="comments"></div>
+  
 
         </div>
           
@@ -462,6 +487,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
@@ -474,6 +504,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#应用单例启动（采用文件锁方式）"><span class="nav-number">1.</span> <span class="nav-text">应用单例启动（采用文件锁方式）</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -503,7 +535,7 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -516,7 +548,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
