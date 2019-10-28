@@ -55,22 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
-<meta name="keywords" content="应用单例运行,文件锁,fcntl">
+  <meta name="description" content="C/C++ 字符串比较——区分大小写和不区分大小写在C/C++码农生涯，不可避免要使用字符串比较函数，比如匹配路径等需求。这篇文章将介绍字符串比较中区分大小写和不区分大小写所使用的函数。">
+<meta name="keywords" content="MarkDown,Linux,C&#x2F;C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="运行单例应用-文件锁方式.md">
-<meta property="og:url" content="http://JeffCheng95.github.io/2019/10/24/运行单例应用-文件锁方式-md/index.html">
+<meta property="og:title" content="C&#x2F;C++:字符串比较——区分大小写和不区分大小">
+<meta property="og:url" content="http://JeffCheng95.github.io/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/index.html">
 <meta property="og:site_name" content="JeffCheng&#39;s Blog">
-<meta property="og:description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
+<meta property="og:description" content="C/C++ 字符串比较——区分大小写和不区分大小写在C/C++码农生涯，不可避免要使用字符串比较函数，比如匹配路径等需求。这篇文章将介绍字符串比较中区分大小写和不区分大小写所使用的函数。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png">
-<meta property="og:image" content="http://s1.knowsky.com/20170227/sjygkkw2x5y55.png">
-<meta property="og:updated_time" content="2019-10-24T09:54:25.392Z">
+<meta property="og:updated_time" content="2019-10-28T06:39:35.046Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="运行单例应用-文件锁方式.md">
-<meta name="twitter:description" content="应用单例启动（采用文件锁方式） 有时候我们的应用程序在系统中可能只允许启动一个(比如服务程序)，怎么实现这种需求呢？">
-<meta name="twitter:image" content="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png">
-  <link rel="canonical" href="http://JeffCheng95.github.io/2019/10/24/运行单例应用-文件锁方式-md/">
+<meta name="twitter:title" content="C&#x2F;C++:字符串比较——区分大小写和不区分大小">
+<meta name="twitter:description" content="C/C++ 字符串比较——区分大小写和不区分大小写在C/C++码农生涯，不可避免要使用字符串比较函数，比如匹配路径等需求。这篇文章将介绍字符串比较中区分大小写和不区分大小写所使用的函数。">
+  <link rel="canonical" href="http://JeffCheng95.github.io/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/">
 
 
 <script id="page-configurations">
@@ -84,7 +81,7 @@
   };
 </script>
 
-  <title>运行单例应用-文件锁方式.md | JeffCheng's Blog</title>
+  <title>C/C++:字符串比较——区分大小写和不区分大小 | JeffCheng's Blog</title>
   <style>
   .forkme{
  display: none;
@@ -293,7 +290,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://JeffCheng95.github.io/2019/10/24/运行单例应用-文件锁方式-md/">
+    <link itemprop="mainEntityOfPage" href="http://JeffCheng95.github.io/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jeff">
@@ -305,7 +302,7 @@
       <meta itemprop="name" content="JeffCheng's Blog">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">运行单例应用-文件锁方式.md
+        <h1 class="post-title" itemprop="name headline">C/C++:字符串比较——区分大小写和不区分大小
 
           
         </h1>
@@ -321,7 +318,7 @@
                 
               
 
-              <time title="创建时间：2019-10-24 17:52:14 / 修改时间：17:54:25" itemprop="dateCreated datePublished" datetime="2019-10-24T17:52:14+08:00">2019-10-24</time>
+              <time title="创建时间：2019-10-28 14:34:58 / 修改时间：14:39:35" itemprop="dateCreated datePublished" datetime="2019-10-28T14:34:58+08:00">2019-10-28</time>
             </span>
           
             
@@ -334,14 +331,14 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/C-C/" itemprop="url" rel="index"><span itemprop="name">C/C++</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/C-C/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a></span>
 
                 
                 
@@ -350,7 +347,7 @@
           
 
           
-            <span id="/2019/10/24/运行单例应用-文件锁方式-md/" class="post-meta-item leancloud_visitors" data-flag-title="运行单例应用-文件锁方式.md" title="热度">
+            <span id="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/" class="post-meta-item leancloud_visitors" data-flag-title="C/C++:字符串比较——区分大小写和不区分大小" title="热度">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -369,7 +366,7 @@
       
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/10/24/运行单例应用-文件锁方式-md/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/10/24/运行单例应用-文件锁方式-md/" itemprop="commentCount"></span></a>
+    <a title="valine" href="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/" itemprop="commentCount"></span></a>
   </span>
   
   
@@ -383,27 +380,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="应用单例启动（采用文件锁方式）"><a href="#应用单例启动（采用文件锁方式）" class="headerlink" title="应用单例启动（采用文件锁方式）"></a>应用单例启动（采用文件锁方式）</h1><hr>
-<p>有时候我们的应用程序在系统中可能只允许<strong>启动一个</strong>(比如服务程序)，怎么实现这种需求呢？</p>
+        <h1 id="C-C-字符串比较——区分大小写和不区分大小写"><a href="#C-C-字符串比较——区分大小写和不区分大小写" class="headerlink" title="C/C++ 字符串比较——区分大小写和不区分大小写"></a>C/C++ 字符串比较——区分大小写和不区分大小写</h1><p>在C/C++码农生涯，不可避免要使用字符串比较函数，比如匹配路径等需求。这篇文章将介绍字符串比较中区分大小写和不区分大小写所使用的函数。</p>
 <a id="more"></a>
-<p><strong>思想</strong>：我们可以采用文件锁的方式，因为通过文件锁，可以保证同一时刻只有一个应用能占得文件资源，获取锁成功的可以执行，如果被其他进程占用时就不能执行。</p>
-<p><strong>准备</strong>：有了思路后，剩下就是怎么操作设置文件锁了。用到网络锁，就不可避免要使用<a href="https://baike.baidu.com/item/fcntl/6860021?fr=aladdin" target="_blank" rel="noopener">fcntl</a>函数。</p>
+<h1 id="一、区分大小写"><a href="#一、区分大小写" class="headerlink" title="一、区分大小写"></a>一、<a href="https://jeffcheng95.github.io/">区分大小写</a></h1><p>一般我们常用的字符串比较函数都是区分大小写的。<br>我们这里只介绍<strong>strcmp</strong>函数，在windows和linux下函数名和用法都一样。</p>
 <blockquote>
-<ul>
-<li>fcntl函数，调用可以用来对已打开的文件描述符进行各种控制操作以改变已打开文件的的各种属性</li>
-<li>fcntl函数介绍如下：<br><img src="http://s1.knowsky.com/20170227/1zx2pe0xx1o55.png" alt="fcntl函数"></li>
-</ul>
-<p>fcntl的返回值与命令有关。如果出错，所有命令都返回-1，同时错误码记录在errno中；如果成功则返回某个其他值。下列四个命令有特定返回值：F_DUPFD、F_GETFD、F_GETFL、F_GETOWN.第一个返回新的文件描述符，接下来的两个返回相应标志，最后一个返回一个正的进程ID或负的进程组ID。<br>上述我们用到的是<strong>F_SETLK</strong>。如果<strong>锁被其他进程占用</strong>导致无法设定锁，则返回-1，errno错误代码为<strong>EACCES</strong>或<strong>EAGAIN</strong>。<br>当fcntl用于管理文件记录锁的操作时，第三个参数指向一个struct flock *lock的结构体，如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct flock</span><br><span class="line">&#123;</span><br><span class="line">    l_type;    /*锁的类型*/</span><br><span class="line">    l_whence;  /*偏移量的起始位置：SEEK_SET,SEEK_CUR,SEEK_END*/</span><br><span class="line">    l_start;     /*加锁的起始偏移*/</span><br><span class="line">    l_len;    /*上锁字节*/</span><br><span class="line">    l_pid;   /*锁的属主进程ID */</span><br><span class="line">&#125;; </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p>原型：extern int strcmp(const void *s1, const void *s2);<br>功能：用于比较两个字符串并根据比较结果返回整数。<br>用法：基本形式为strcmp(str1,str2)，若str1=str2，则返回零；若str1&lt;str2，则返回负数；若str1&gt;str2，则返回正数。</p>
 </blockquote>
-<blockquote>
-<p><img src="http://s1.knowsky.com/20170227/sjygkkw2x5y55.png" alt="flock结构体"></p>
-<p>如果要加锁整个文件，通常的方法是将l_start 设置为0，l_whence 设置为SEEK_SET,l_len设置为0.</p>
-</blockquote>
-<p><strong>实现</strong>:基本的一些知识清楚了之后，就要写代码实现了，下面的代码是我写的一个小demo。<br>主要部分：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">struct flock flc;</span><br><span class="line">flc.l_type = F_WRLCK;  // write lock</span><br><span class="line">flc.l_start = 0;</span><br><span class="line">flc.l_whence = SEEK_SET;</span><br><span class="line">flc.l_len = 0;		   //lock the whole file</span><br><span class="line">if(fcntl(fd, F_SETLK, &amp;flc) &lt; 0)</span><br><span class="line">&#123;</span><br><span class="line">	if(errno == EACCES || errno == EAGAIN)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;This process already exist!\n&quot;);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	perror(&quot;Set FileLock Failed!&quot;);</span><br><span class="line">	exit(1);</span><br><span class="line">&#125;</span><br><span class="line">printf(&quot;Process will run!\n&quot;);</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;syslib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *s1=<span class="string">"Hello,Programmers!"</span>;</span><br><span class="line">    <span class="keyword">char</span> *s2=<span class="string">"Hello,programmers!"</span>;</span><br><span class="line">    <span class="keyword">int</span> r;</span><br><span class="line">    clrscr();</span><br><span class="line">    r = <span class="built_in">strcmp</span>(s1,s2);</span><br><span class="line">    <span class="keyword">if</span>(!r)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"s1 and s2 are identical"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(r&lt;<span class="number">0</span>)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"s1 less than s2"</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"s1 greater than s2"</span>);</span><br><span class="line">    getchar();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>代码地址：<a href="https://github.com/JeffCheng95/C-C-Demo/tree/master/%E5%BA%94%E7%94%A8%E5%8D%95%E4%BE%8B%E8%BF%90%E8%A1%8C" target="_blank" rel="noopener">https://github.com/JeffCheng95/C-C-Demo/tree/master/应用单例运行</a></p>
+<h1 id="二、不区分大小写"><a href="#二、不区分大小写" class="headerlink" title="二、不区分大小写"></a>二、不区分大小写</h1><p>不区分大小写的函数，在windows和linux平台下不一样。</p>
+<h2 id="1、Windows平台下的stricmp"><a href="#1、Windows平台下的stricmp" class="headerlink" title="1、Windows平台下的stricmp"></a>1、Windows平台下的stricmp</h2><blockquote>
+<p>原型：extern int stricmp(char <em>s1,char * s2);<br>功能：(*</em>不区分大小写**) 比较两个字符串并根据比较结果返回整数。<br>用法：与strcmp一样， stricmp(str1, str2);</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *str1=<span class="string">"I am OldWolf"</span>;</span><br><span class="line">	<span class="keyword">char</span> *str2=<span class="string">"I am Oldwolf"</span>;</span><br><span class="line">	<span class="keyword">int</span> cmp;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"原字符串分别为：\n%s\n%s\n\n"</span>,str1,str2);</span><br><span class="line">	cmp=stricmp(str1,str2);</span><br><span class="line">	<span class="keyword">if</span> (cmp!=<span class="number">0</span>)</span><br><span class="line">	   <span class="built_in">printf</span>(<span class="string">"stricmp比较字符串不相同！\n"</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	   <span class="built_in">printf</span>(<span class="string">"stricmp比较字符串相同！\n"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、Linux平台下的strcasecmp"><a href="#2、Linux平台下的strcasecmp" class="headerlink" title="2、Linux平台下的strcasecmp"></a>2、Linux平台下的strcasecmp</h2><blockquote>
+<p>原型： int strcasecmp (const char <em>s1, const char <em>s2);<br>功能：(</em></em>不区分大小写**) 比较两个字符串并根据比较结果返回整数。<br>用法：与strcmp一样， strcasecmp(str1, str2);</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *a=<span class="string">"aBcDeF"</span>;</span><br><span class="line">　<span class="keyword">char</span> *b=<span class="string">"AbCdEf"</span>;</span><br><span class="line">　<span class="keyword">if</span>(!strcasecmp(a,b))</span><br><span class="line">　	<span class="built_in">printf</span>(<span class="string">"%s=%s/n"</span>,a,b);</span><br><span class="line">　<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -431,12 +429,12 @@
   <!-- JS库 sweetalert 可修改路径 -->
 
 
-  <p><span>本文标题:</span><a href="/2019/10/24/运行单例应用-文件锁方式-md/">运行单例应用-文件锁方式.md</a></p>
+  <p><span>本文标题:</span><a href="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/">C/C++:字符串比较——区分大小写和不区分大小</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Jeff 的个人博客">Jeff</a></p>
-  <p><span>发布时间:</span>2019年10月24日 - 17:52</p>
-  <p><span>最后更新:</span>2019年10月24日 - 17:54</p>
-  <p><span>原始链接:</span><a href="/2019/10/24/运行单例应用-文件锁方式-md/" title="运行单例应用-文件锁方式.md">http://JeffCheng95.github.io/2019/10/24/运行单例应用-文件锁方式-md/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://JeffCheng95.github.io/2019/10/24/运行单例应用-文件锁方式-md/"  aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2019年10月28日 - 14:34</p>
+  <p><span>最后更新:</span>2019年10月28日 - 14:39</p>
+  <p><span>原始链接:</span><a href="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/" title="C/C++:字符串比较——区分大小写和不区分大小">http://JeffCheng95.github.io/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://JeffCheng95.github.io/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -464,11 +462,11 @@
           
           <div class="post-tags">
             
-              <a href="/tags/应用单例运行/" rel="tag"># 应用单例运行</a>
+              <a href="/tags/MarkDown/" rel="tag"># MarkDown</a>
             
-              <a href="/tags/文件锁/" rel="tag"># 文件锁</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
             
-              <a href="/tags/fcntl/" rel="tag"># fcntl</a>
+              <a href="/tags/C-C/" rel="tag"># C/C++</a>
             
           </div>
         
@@ -478,8 +476,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/22/Linux：解决应用程序-动态库中与加载的其他动态库的函数重名问题/" rel="next" title="Linux：解决应用程序/动态库中与加载的其他动态库的函数重名问题">
-                  <i class="fa fa-chevron-left"></i> Linux：解决应用程序/动态库中与加载的其他动态库的函数重名问题
+                <a href="/2019/10/24/运行单例应用-文件锁方式-md/" rel="next" title="运行单例应用-文件锁方式.md">
+                  <i class="fa fa-chevron-left"></i> 运行单例应用-文件锁方式.md
                 </a>
               
             </div>
@@ -487,10 +485,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/10/28/C-C-字符串比较——区分大小写和不区分大小/" rel="prev" title="C/C++:字符串比较——区分大小写和不区分大小">
-                  C/C++:字符串比较——区分大小写和不区分大小 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -542,7 +536,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#应用单例启动（采用文件锁方式）"><span class="nav-number">1.</span> <span class="nav-text">应用单例启动（采用文件锁方式）</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-C-字符串比较——区分大小写和不区分大小写"><span class="nav-number">1.</span> <span class="nav-text">C/C++ 字符串比较——区分大小写和不区分大小写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、区分大小写"><span class="nav-number">2.</span> <span class="nav-text">一、区分大小写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、不区分大小写"><span class="nav-number">3.</span> <span class="nav-text">二、不区分大小写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、Windows平台下的stricmp"><span class="nav-number">3.1.</span> <span class="nav-text">1、Windows平台下的stricmp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、Linux平台下的strcasecmp"><span class="nav-number">3.2.</span> <span class="nav-text">2、Linux平台下的strcasecmp</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
