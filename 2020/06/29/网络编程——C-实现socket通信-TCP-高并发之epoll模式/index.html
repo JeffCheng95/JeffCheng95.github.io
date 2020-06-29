@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="相关链接：TCP连接与释放、网络编程——C++实现socket通信(TCP) 相关函数： 123456789101112131415161718服务端：socket()bind()listen()epoll_create()  高并发poll模式epoll_ctl()epoll_wait()accept()read() 或 recv()等write() 或 send()等close()客户端：so">
+<meta name="keywords" content="C&#x2F;C++,网络编程,socket,epoll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络编程——C-实现socket通信-TCP-高并发之epoll模式">
+<meta property="og:url" content="http://JeffCheng95.github.io/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/index.html">
+<meta property="og:site_name" content="JeffCheng&#39;s Blog">
+<meta property="og:description" content="相关链接：TCP连接与释放、网络编程——C++实现socket通信(TCP) 相关函数： 123456789101112131415161718服务端：socket()bind()listen()epoll_create()  高并发poll模式epoll_ctl()epoll_wait()accept()read() 或 recv()等write() 或 send()等close()客户端：so">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-29T06:22:12.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络编程——C-实现socket通信-TCP-高并发之epoll模式">
+<meta name="twitter:description" content="相关链接：TCP连接与释放、网络编程——C++实现socket通信(TCP) 相关函数： 123456789101112131415161718服务端：socket()bind()listen()epoll_create()  高并发poll模式epoll_ctl()epoll_wait()accept()read() 或 recv()等write() 或 send()等close()客户端：so">
+  <link rel="canonical" href="http://JeffCheng95.github.io/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>网络编程——C-实现socket通信-TCP-高并发之epoll模式 | JeffCheng's Blog</title>
+  <style>
+  .forkme{
+ display: none;
+ }
+  @media (min-width: 768px) {
+ .forkme{
+ display: inline;
+ }
+  }
+  </style>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9ff3a68a9139730acdb7e3f6dc368f1b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+	<div class="forkme">
+	<a href="https://github.com/JeffCheng95" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_black.png" alt="Fork me on GitHub"></a>
+	</div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JeffCheng's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-hot">
+      
+    
+
+    <a href="/hot/" rel="section"><i class="menu-item-icon fa fa-fw fa-signal"></i> <br>热度排行</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a class="book-mark-link book-mark-link-fixed" href="#"></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://JeffCheng95.github.io/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeff">
+      <meta itemprop="description" content="Try My Best">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JeffCheng's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">网络编程——C-实现socket通信-TCP-高并发之epoll模式
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-29 14:20:17 / 修改时间：14:22:12" itemprop="dateCreated datePublished" datetime="2020-06-29T14:20:17+08:00">2020-06-29</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/C-C/" itemprop="url" rel="index"><span itemprop="name">C/C++</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/C-C/网络编程/" itemprop="url" rel="index"><span itemprop="name">网络编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span id="/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/" class="post-meta-item leancloud_visitors" data-flag-title="网络编程——C-实现socket通信-TCP-高并发之epoll模式" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+			  <span>℃</span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>相关链接：<a href="https://blog.csdn.net/buknow/article/details/81157002" target="_blank" rel="noopener">TCP连接与释放</a>、<a href="https://blog.csdn.net/buknow/article/details/106664612" target="_blank" rel="noopener">网络编程——C++实现socket通信(TCP)</a></p>
+<p>相关函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">服务端：</span><br><span class="line">socket()</span><br><span class="line">bind()</span><br><span class="line">listen()</span><br><span class="line">epoll_create()  高并发poll模式</span><br><span class="line">epoll_ctl()</span><br><span class="line">epoll_wait()</span><br><span class="line">accept()</span><br><span class="line">read() 或 recv()等</span><br><span class="line">write() 或 send()等</span><br><span class="line">close()</span><br><span class="line"></span><br><span class="line">客户端：</span><br><span class="line">socket()</span><br><span class="line">connect()</span><br><span class="line">write() 或 send()等</span><br><span class="line">read() 或 recv()等</span><br><span class="line">close()</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>着重说明下==epoll函数==用法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">epoll是增强版的poll，可以看做event poll，通过红黑树和内核维护的等待队列等结构实现的事件触发等机制实现的高并发，解决了select和poll未能解决的遍历所有fd来查找响应的缺陷，同时可以通过非阻塞IO模式实现更高的服务性能。</span><br><span class="line"></span><br><span class="line">/proc/sys/fs/epoll/max_user_watches:这个文件中的值表示用户能注册到epoll实例中的最大文件描述符的数量限制(也就是硬件本身支持的最大数量限制)</span><br><span class="line"></span><br><span class="line">关键函数</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create</span><span class="params">(<span class="keyword">int</span> size)</span></span>;	<span class="comment">//创建一个epoll实例(本质是红黑树),也占用个文件描述符，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</span></span><br><span class="line">				<span class="comment">//size用来告诉内核这个监听的数目一共有多大，自从Linux 2.6.8开始，size参数被忽略，但是依然要大于0。</span></span><br><span class="line"></span><br><span class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)；</span><br><span class="line">	将监听的文件描述符添加到epoll实例中，实例代码为将标准输入文件描述符添加到epoll中</span><br><span class="line">	第一个参数是epoll_create()的返回值，</span><br><span class="line">	第二个参数表示动作，用三个宏来表示：</span><br><span class="line">		EPOLL_CTL_ADD：注册新的fd到epfd中；</span><br><span class="line">		EPOLL_CTL_MOD：修改已经注册的fd的监听事件；</span><br><span class="line">		EPOLL_CTL_DEL：从epfd中删除一个fd；</span><br><span class="line">	第三个参数是需要监听的fd，</span><br><span class="line">	第四个参数是告诉内核需要监听什么事，<span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span>结构如下：</span></span><br><span class="line"><span class="class">		<span class="title">struct</span> <span class="title">epoll_event</span> &#123;</span></span><br><span class="line">			<span class="keyword">__uint32_t</span> events; <span class="comment">// Epoll events </span></span><br><span class="line">			<span class="keyword">epoll_data_t</span> data; <span class="comment">// User data variable </span></span><br><span class="line">		&#125;;</span><br><span class="line">		events可以是以下几个宏的集合(常用的IN/OUT/ERR/ET)：</span><br><span class="line">			EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）；</span><br><span class="line">			EPOLLOUT：表示对应的文件描述符可以写；</span><br><span class="line">			EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）；</span><br><span class="line">			EPOLLERR：表示对应的文件描述符发生错误；</span><br><span class="line">			EPOLLHUP：表示对应的文件描述符被挂断；</span><br><span class="line">			EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的。</span><br><span class="line">			EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里。</span><br><span class="line">		<span class="keyword">epoll_data_t</span>联合体定义如下：(注意是联合体)</span><br><span class="line">			<span class="keyword">typedef</span> <span class="keyword">union</span> epoll_data</span><br><span class="line">			&#123;</span><br><span class="line">			  <span class="keyword">void</span> *ptr;		<span class="comment">//可以传递任意类型数据，常用来传 回调函数</span></span><br><span class="line">			  <span class="keyword">int</span> fd;		<span class="comment">//可以直接传递客户端的fd</span></span><br><span class="line">			  <span class="keyword">uint32_t</span> u32;</span><br><span class="line">			  <span class="keyword">uint64_t</span> u64;</span><br><span class="line">			&#125; <span class="keyword">epoll_data_t</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event * events, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout)</span></span></span><br><span class="line">等待epoll事件从epoll实例中发生， 并返回事件总数以及传出对应文件描述符</span><br><span class="line">	参数events用来从内核得到事件的集合，</span><br><span class="line">	参数maxevents表示每次能处理的最大事件数，告之内核这个events有多大，这个maxevents的值不能大于创建epoll_create()时的size，</span><br><span class="line">	参数timeout是超时时间（毫秒，<span class="number">0</span>会立即返回，<span class="number">-1</span>将不确定，也有说法说是永久阻塞）。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：epoll的两种触发模式：</span><br><span class="line">	边沿触发vs水平触发</span><br><span class="line">	epoll事件有两种模型，边沿触发：edge-triggered (ET)， 水平触发：level-triggered (LT)</span><br><span class="line">	水平触发(level-triggered),是epoll的默认模式</span><br><span class="line">		socket接收缓冲区不为空 有数据可读 读事件一直触发</span><br><span class="line">		socket发送缓冲区不满 可以继续写入数据 写事件一直触发</span><br><span class="line">	边沿触发(edge-triggered)</span><br><span class="line">		socket的接收缓冲区状态变化时触发读事件，即空的接收缓冲区刚接收到数据时触发读事件</span><br><span class="line">		socket的发送缓冲区状态变化时触发写事件，即满的缓冲区刚空出空间时触发读事件</span><br><span class="line">	边沿触发仅触发一次，水平触发会一直触发。</span><br><span class="line">	开源库:libevent 采用水平触发， nginx 采用边沿触发</span><br></pre></td></tr></table></figure>
+
+<p>注意：每当服务端连接断开后，进入TIME_WAIT状态，等待2msl时间之后才能重新使用IP和端口，否则在bind时就会报错。要解决这个问题可以在程序开始时调用端口复用函数setsockopt。原型如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//int setsockopt(int sockfd, int level, int optname,const void *optval, socklen_t optlen);</span></span><br><span class="line">    <span class="comment">/*　sockfd：标识一个套接口的描述字。</span></span><br><span class="line"><span class="comment">　　    level：选项定义的层次；支持SOL_SOCKET、IPPROTO_TCP、IPPROTO_IP和IPPROTO_IPV6。</span></span><br><span class="line"><span class="comment">　　    optname：需设置的选项。</span></span><br><span class="line"><span class="comment">　　    optval：指针，指向存放选项值的缓冲区</span></span><br><span class="line"><span class="comment">　　    optlen：optval缓冲区长度。</span></span><br><span class="line"><span class="comment">　　    返回值：  成功返回0，失败返回 -1.  */</span></span><br><span class="line">　　    </span><br><span class="line"></span><br><span class="line">实际调用：</span><br><span class="line"> setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &amp;on, <span class="keyword">sizeof</span>(on));</span><br></pre></td></tr></table></figure>
+
+<p>==废话不多说，上源码！==</p>
+<blockquote>
+<p>实现的功能：客户端C向服务端S发送一串字符数据，S端会对字符串做转大写操作然后回发给C端。直接在咱们Tcp_Server.cpp基础上修改代码</p>
+</blockquote>
+<p><strong>服务端</strong>Epoll_Server.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;	//epoll头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXSIZE 1024</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IP_ADDR <span class="meta-string">"127.0.0.1"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IP_PORT 8888</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i_listenfd, i_connfd;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">st_sersock</span>;</span></span><br><span class="line">	<span class="keyword">char</span> msg[MAXSIZE];</span><br><span class="line">	<span class="keyword">int</span> nrecvSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">ev</span>, <span class="title">events</span>[<span class="title">MAXSIZE</span>];</span></span><br><span class="line">	<span class="keyword">int</span> epfd, nCounts;	<span class="comment">//epfd:epoll实例句柄, nCounts:epoll_wait返回值</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((i_listenfd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>) ) &lt; <span class="number">0</span>)	<span class="comment">//建立socket套接字</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"socket Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memset</span>(&amp;st_sersock, <span class="number">0</span>, <span class="keyword">sizeof</span>(st_sersock));</span><br><span class="line">	st_sersock.sin_family = AF_INET;  <span class="comment">//IPv4协议</span></span><br><span class="line">	st_sersock.sin_addr.s_addr = htonl(INADDR_ANY);	<span class="comment">//INADDR_ANY转换过来就是0.0.0.0，泛指本机的意思，也就是表示本机的所有IP，因为有些机子不止一块网卡，多网卡的情况下，这个就表示所有网卡ip地址的意思。</span></span><br><span class="line">	st_sersock.sin_port = htons(IP_PORT);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(bind(i_listenfd,(struct sockaddr*)&amp;st_sersock, <span class="keyword">sizeof</span>(st_sersock)) &lt; <span class="number">0</span>) <span class="comment">//将套接字绑定IP和端口用于监听</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"bind Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(listen(i_listenfd, <span class="number">20</span>) &lt; <span class="number">0</span>)	<span class="comment">//设定可同时排队的客户端最大连接个数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"listen Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((epfd = epoll_create(MAXSIZE)) &lt; <span class="number">0</span>)	<span class="comment">//创建epoll实例</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"epoll_create Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	ev.events = EPOLLIN;</span><br><span class="line">	ev.data.fd = i_listenfd;</span><br><span class="line">	<span class="keyword">if</span>(epoll_ctl(epfd, EPOLL_CTL_ADD, i_listenfd, &amp;ev) &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"epoll_ctl Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"======waiting for client's request======\n"</span>);</span><br><span class="line">	<span class="comment">//准备接受客户端连接</span></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>((nCounts = epoll_wait(epfd, events, MAXSIZE, <span class="number">-1</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"epoll_ctl Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">			<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(nCounts == <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"time out, No data!\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nCounts; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">int</span> tmp_epoll_recv_fd = events[i].data.fd;</span><br><span class="line">				<span class="keyword">if</span>(tmp_epoll_recv_fd == i_listenfd)	<span class="comment">//有客户端连接请求</span></span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">if</span>((i_connfd = accept(i_listenfd, (struct sockaddr*)<span class="literal">NULL</span>, <span class="literal">NULL</span>)) &lt; <span class="number">0</span>)	<span class="comment">//阻塞等待客户端连接</span></span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"accept Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">					<span class="comment">//	continue;</span></span><br><span class="line">					&#125;	</span><br><span class="line">					<span class="keyword">else</span></span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"Client[%d], welcome!\n"</span>, i_connfd);</span><br><span class="line">					&#125;</span><br><span class="line">	</span><br><span class="line">					ev.events = EPOLLIN;</span><br><span class="line">					ev.data.fd = i_connfd;</span><br><span class="line">					<span class="keyword">if</span>(epoll_ctl(epfd, EPOLL_CTL_ADD, i_connfd, &amp;ev) &lt; <span class="number">0</span>)</span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"epoll_ctl Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">						<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span>	<span class="comment">//若是已连接的客户端发来数据请求</span></span><br><span class="line">				&#123;</span><br><span class="line">					<span class="comment">//接受客户端发来的消息并作处理(小写转大写)后回写给客户端</span></span><br><span class="line">					<span class="built_in">memset</span>(msg, <span class="number">0</span> ,<span class="keyword">sizeof</span>(msg));</span><br><span class="line">					<span class="keyword">if</span>((nrecvSize = read(tmp_epoll_recv_fd, msg, MAXSIZE)) &lt; <span class="number">0</span>)</span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"read Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">						<span class="keyword">continue</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> <span class="keyword">if</span>( nrecvSize == <span class="number">0</span>)	<span class="comment">//read返回0代表对方已close断开连接。</span></span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"client has disconnected!\n"</span>);</span><br><span class="line">						epoll_ctl(epfd, EPOLL_CTL_DEL, tmp_epoll_recv_fd, <span class="literal">NULL</span>);</span><br><span class="line">						close(tmp_epoll_recv_fd);  <span class="comment">//</span></span><br><span class="line">					</span><br><span class="line">						<span class="keyword">continue</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span></span><br><span class="line">					&#123;</span><br><span class="line">						<span class="built_in">printf</span>(<span class="string">"recvMsg:%s"</span>, msg);</span><br><span class="line">						<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; msg[i] != <span class="string">'\0'</span>; i++)</span><br><span class="line">						&#123;</span><br><span class="line">							msg[i] = <span class="built_in">toupper</span>(msg[i]);</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">if</span>(write(tmp_epoll_recv_fd, msg, <span class="built_in">strlen</span>(msg)+<span class="number">1</span>) &lt; <span class="number">0</span>)</span><br><span class="line">						&#123;</span><br><span class="line">							<span class="built_in">printf</span>(<span class="string">"write Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">						&#125;</span><br><span class="line"></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="comment">//while</span></span><br><span class="line">	close(i_listenfd);</span><br><span class="line">	close(epfd);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端</strong>Epoll_Client.cpp (直接用咱们Tcp_Client.cpp就可以)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXSIZE 1024</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IP_ADDR <span class="meta-string">"127.0.0.1"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IP_PORT 8888</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> i_sockfd = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SigCatch</span><span class="params">(<span class="keyword">int</span> sigNum)</span>	<span class="comment">//信号捕捉函数(捕获Ctrl+C)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(i_sockfd != <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		close(i_sockfd);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Bye~! Will Exit...\n"</span>);</span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">st_clnsock</span>;</span></span><br><span class="line">	<span class="keyword">char</span> msg[<span class="number">1024</span>];</span><br><span class="line">	<span class="keyword">int</span> nrecvSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	signal(SIGINT, SigCatch);	<span class="comment">//注册信号捕获函数</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((i_sockfd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>) ) &lt; <span class="number">0</span>)	<span class="comment">//建立套接字</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"socket Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memset</span>(&amp;st_clnsock, <span class="number">0</span>, <span class="keyword">sizeof</span>(st_clnsock));</span><br><span class="line">	st_clnsock.sin_family = AF_INET;  <span class="comment">//IPv4协议</span></span><br><span class="line">	<span class="comment">//IP地址转换(直接可以从物理字节序的点分十进制 转换成网络字节序)</span></span><br><span class="line">	<span class="keyword">if</span>(inet_pton(AF_INET, IP_ADDR, &amp;st_clnsock.sin_addr) &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"inet_pton Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	st_clnsock.sin_port = htons(IP_PORT);	<span class="comment">//端口转换(物理字节序到网络字节序)</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(connect(i_sockfd, (struct sockaddr*)&amp;st_clnsock, <span class="keyword">sizeof</span>(st_clnsock)) &lt; <span class="number">0</span>)	<span class="comment">//主动向设置的IP和端口号的服务端发出连接</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"connect Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"======connect to server, sent data======\n"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)	<span class="comment">//循环输入，向服务端发送数据并接受服务端返回的数据</span></span><br><span class="line">	&#123;</span><br><span class="line">		fgets(msg, MAXSIZE, <span class="built_in">stdin</span>);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"will send: %s"</span>, msg);</span><br><span class="line">		<span class="keyword">if</span>(write(i_sockfd, msg, MAXSIZE) &lt; <span class="number">0</span>)	<span class="comment">//发送数据</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"write Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">			<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">memset</span>(msg, <span class="number">0</span>, <span class="keyword">sizeof</span>(msg));</span><br><span class="line">		<span class="keyword">if</span>((nrecvSize = read(i_sockfd, msg, MAXSIZE)) &lt; <span class="number">0</span>)	<span class="comment">//接受数据</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"read Error: %s (errno: %d)\n"</span>, strerror(errno), errno);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(nrecvSize == <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Service Close!\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Server return: %s\n"</span>, msg);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="Jeff wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
+
+      
+        
+      
+
+	<div>
+      
+        
+
+<div class="my_post_copyright">
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------ 版权信息 ------</div>
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script> 
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+
+
+  <p><span>本文标题:</span><a href="/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/">网络编程——C-实现socket通信-TCP-高并发之epoll模式</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Jeff 的个人博客">Jeff</a></p>
+  <p><span>发布时间:</span>2020年06月29日 - 14:20</p>
+  <p><span>最后更新:</span>2020年06月29日 - 14:22</p>
+  <p><span>原始链接:</span><a href="/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/" title="网络编程——C-实现socket通信-TCP-高并发之epoll模式">http://JeffCheng95.github.io/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://JeffCheng95.github.io/2020/06/29/网络编程——C-实现socket通信-TCP-高并发之epoll模式/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+	});
+    });  
+</script>
+
+
+      
+	</div>
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/C-C/" rel="tag"># C/C++</a>
+            
+              <a href="/tags/网络编程/" rel="tag"># 网络编程</a>
+            
+              <a href="/tags/socket/" rel="tag"># socket</a>
+            
+              <a href="/tags/epoll/" rel="tag"># epoll</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/06/19/网络编程——C-实现socket通信-TCP-高并发之poll模式-md/" rel="next" title="网络编程——C++实现socket通信(TCP)高并发之poll模式.md">
+                  <i class="fa fa-chevron-left"></i> 网络编程——C++实现socket通信(TCP)高并发之poll模式.md
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="Jeff">
+  <p class="site-author-name" itemprop="name">Jeff</p>
+  <div class="site-description" itemprop="description">Try My Best</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/JeffCheng95" title="GitHub &rarr; https://github.com/JeffCheng95" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:jeff_ck@163.com" title="E-Mail &rarr; mailto:jeff_ck@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/3781060321" title="Weibo &rarr; https://weibo.com/u/3781060321" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/buknow" title="CSDN &rarr; https://blog.csdn.net/buknow" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+    
+  </div>
+
+
+<div id="days"></div>
+<script>
+function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("09/18/2019 12:00:00");
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=setzero(Math.floor(e_hrsold));
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+    seconds=setzero(Math.floor((e_minsold-minsold)*60));
+    document.getElementById('days').innerHTML="已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分 "+seconds+" 秒";
+}
+function setzero(i) {
+    if (i<10) {
+        i="0" + i
+    };
+    return i;
+}
+show_date_time();
+</script>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jeff</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.0</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">|　博客全站共16.8k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><script src="/js/bookmark.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'dKudYtW5fpJO9mqS5et3dAyi-gzGzoHsz',
+    appKey: 'VgOnBww5FVNlLDH42jJ8sD4q',
+    placeholder: '欢迎评论交流！',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
